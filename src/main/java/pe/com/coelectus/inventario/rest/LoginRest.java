@@ -17,6 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import lombok.extern.slf4j.Slf4j;
 import pe.com.coelectus.inventario.dto.AuthUser;
+import pe.com.coelectus.inventario.dto.converter.MenuConverter;
+import pe.com.coelectus.inventario.dto.converter.RoleConverter;
+import pe.com.coelectus.inventario.dto.converter.SubmenuConverter;
+import pe.com.coelectus.inventario.dto.converter.UserConverter;
+import pe.com.coelectus.inventario.entity.Menu;
 import pe.com.coelectus.inventario.entity.User;
 import pe.com.coelectus.inventario.service.UserService;
 import pe.com.coelectus.inventario.util.JwtToken;
@@ -28,6 +33,14 @@ public class LoginRest {
 
 	@Autowired
 	UserService userService;
+	@Autowired
+	UserConverter userConverter;
+	@Autowired
+	RoleConverter roleConverter;
+	@Autowired
+	SubmenuConverter submenuConverter;
+	@Autowired
+	MenuConverter menuConverter;
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	@Autowired
@@ -46,8 +59,12 @@ public class LoginRest {
 		user = new User(user.getUsername());
 		user = userService.findByUsername(user);
 
-		AuthUser authUser = new AuthUser(user.getPersonId(), user.getRole().getName(), user.getUsername(),
-				user.getName() + " " + user.getLastName(), user.getEmail(), user.getGender(), token);
+		for(Menu m : user.getRole().getMenus()) {
+			System.out.println(m.getName());
+		}
+		AuthUser authUser = new AuthUser();
+		authUser.setUser(userConverter.fromEntity(user));
+		authUser.setToken(token);
 
 		return ResponseEntity.ok(authUser);
 

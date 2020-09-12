@@ -24,6 +24,9 @@ public class Menu {
 	@Column(name = "order_nu")
 	private Integer orderNu;
 	
+	@Column(name = "icon")
+	private String icon;
+	
 	@OneToMany(mappedBy = "menu")
 	@JsonManagedReference
 	private List<Submenu> submenus;
@@ -52,6 +55,14 @@ public class Menu {
 		this.orderNu = orderNu;
 	}
 
+	public String getIcon() {
+		return icon;
+	}
+
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
 	public List<Submenu> getSubmenus() {
 		return submenus;
 	}
@@ -62,7 +73,7 @@ public class Menu {
 
 	@Override
 	public String toString() {
-		return "Menu [menuId=" + menuId + ", name=" + name + ", orderNu=" + orderNu + ", submenus=" + submenus + "]";
+		return "Menu [menuId=" + menuId + ", name=" + name + ", orderNu=" + orderNu + ", icon=" + icon + "]";
 	}
 	
 }

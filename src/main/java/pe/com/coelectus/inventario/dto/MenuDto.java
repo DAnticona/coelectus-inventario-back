@@ -7,7 +7,8 @@ public class MenuDto {
 	private Integer menuId;
 	private String name;
 	private Integer orderNu;
-	private List<String> submenus;
+	private String icon;
+	private List<SubmenuDto> submenus;
 	
 	public Integer getMenuId() {
 		return menuId;
@@ -27,10 +28,16 @@ public class MenuDto {
 	public void setOrderNu(Integer orderNu) {
 		this.orderNu = orderNu;
 	}
-	public List<String> getSubmenus() {
+	public String getIcon() {
+		return icon;
+	}
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+	public List<SubmenuDto> getSubmenus() {
 		return submenus;
 	}
-	public void setSubmenus(List<String> submenus) {
+	public void setSubmenus(List<SubmenuDto> submenus) {
 		this.submenus = submenus;
 	}
 	

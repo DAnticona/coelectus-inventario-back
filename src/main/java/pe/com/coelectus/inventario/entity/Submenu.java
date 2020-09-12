@@ -25,6 +25,9 @@ public class Submenu {
 	@Column(name = "order_nu")
 	private Integer orderNu;
 	
+	@Column
+	private String path;
+	
 	@MapsId("idMenu")
 	@ManyToOne
 	@JoinColumn(name = "menu_id", referencedColumnName = "menu_id")
@@ -53,6 +56,14 @@ public class Submenu {
 
 	public void setOrderNu(Integer orderNu) {
 		this.orderNu = orderNu;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 
 	public Menu getMenu() {

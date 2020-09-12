@@ -6,6 +6,7 @@ public class SubmenuDto {
 	private Integer submenuId;
 	private String name;
 	private Integer orderNu;
+	private String path;
 	
 	public Integer getMenuId() {
 		return menuId;
@@ -31,5 +32,10 @@ public class SubmenuDto {
 	public void setOrderNu(Integer orderNu) {
 		this.orderNu = orderNu;
 	}
-	
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
 }

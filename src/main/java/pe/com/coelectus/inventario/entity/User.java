@@ -21,6 +21,12 @@ public class User extends Person {
 	
 	@Column(name = "password", nullable = false)
 	private String password;
+	
+	@Column(name="active_fg")
+	private String activeFg;
+	
+	@Column(name="image")
+	private String image;
 
 	public User() {
 	}
@@ -53,9 +59,26 @@ public class User extends Person {
 		this.password = password;
 	}
 
+	public String getActiveFg() {
+		return activeFg;
+	}
+
+	public void setActiveFg(String activeFg) {
+		this.activeFg = activeFg;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
 	@Override
 	public String toString() {
-		return "User [role=" + role + ", username=" + username + ", password=" + password + "]";
+		return "User [role=" + role + ", username=" + username + ", password=" + password + ", activeFg=" + activeFg
+				+ ", image=" + image + "]";
 	}
 	
 }
