@@ -24,6 +24,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		user.setEmail(dto.getEmail());
 		user.setGender(dto.getGender());
 		user.setImage(dto.getImage());
+		user.setImageFilename(dto.getImageFilename());
 		user.setUsername(dto.getUsername());
 		user.setPassword(dto.getPassword());
 		user.setActiveFg(dto.getActiveFg());
@@ -50,6 +51,7 @@ public class UserConverter extends AbstractConverter<User, UserDto> {
 		user.setEmail(entity.getEmail());
 		user.setGender(entity.getGender());
 		user.setImage(entity.getImage());
+		user.setImageFilename(entity.getImageFilename());
 		user.setUsername(entity.getUsername());
 		user.setPassword(entity.getPassword());
 		user.setActiveFg(entity.getActiveFg());

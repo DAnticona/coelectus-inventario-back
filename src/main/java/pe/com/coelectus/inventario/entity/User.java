@@ -27,6 +27,9 @@ public class User extends Person {
 	
 	@Column(name="image")
 	private String image;
+	
+	@Column(name = "image_filename")
+	private String imageFilename;
 
 	public User() {
 	}
@@ -74,11 +77,18 @@ public class User extends Person {
 	public void setImage(String image) {
 		this.image = image;
 	}
+	
+	public String getImageFilename() {
+		return imageFilename;
+	}
+
+	public void setImageFilename(String imageFilename) {
+		this.imageFilename = imageFilename;
+	}
 
 	@Override
 	public String toString() {
 		return "User [role=" + role + ", username=" + username + ", password=" + password + ", activeFg=" + activeFg
-				+ ", image=" + image + "]";
+				+ ", image=" + image + ", imageFilename=" + imageFilename + "]";
 	}
-	
 }

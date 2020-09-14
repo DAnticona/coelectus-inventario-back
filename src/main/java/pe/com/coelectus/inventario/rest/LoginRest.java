@@ -64,6 +64,9 @@ public class LoginRest {
 		}
 		AuthUser authUser = new AuthUser();
 		authUser.setUser(userConverter.fromEntity(user));
+		if(authUser.getUser().getActiveFg().equalsIgnoreCase("N")) {
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario inactivo");
+		}
 		authUser.setToken(token);
 
 		return ResponseEntity.ok(authUser);
@@ -83,7 +86,7 @@ public class LoginRest {
 		} catch (BadCredentialsException e) {
 
 			log.info("INVALID_CREDENTIALS");
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "INVALID CREDENTIALS", e);
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuario o contraseña incorrecta", e);
 
 		}
 	}

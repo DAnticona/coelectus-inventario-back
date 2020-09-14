@@ -52,5 +52,4 @@ public class SaleDto {
 		return "SaleDto [saleId=" + saleId + ", client=" + client + ", date=" + date + ", amount=" + amount
 				+ ", activeFg=" + activeFg + "]";
 	}
-
 }

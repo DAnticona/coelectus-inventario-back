@@ -1,15 +1,24 @@
 package pe.com.coelectus.inventario.service;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,7 +34,7 @@ import pe.com.coelectus.inventario.util.CryptPassword;
 
 @Service("userDetailsService")
 public class UserService implements UserDetailsService {
-
+	
 	@Autowired
 	UserDao userDao;
 	@Autowired
@@ -34,6 +43,11 @@ public class UserService implements UserDetailsService {
 	RoleDao roleDao;
 	@Autowired
 	CryptPassword cryptPassword;
+	
+	@Value("${user.image.path}")
+	private String userImagePath;
+	@Value("${user.image.url}")
+	private String userImageUrl;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -204,5 +218,60 @@ public class UserService implements UserDetailsService {
 		
 		return userDao.findById(user.getPersonId()).orElse(null);
 		
+	}
+	
+	public User saveImage(Long userId, MultipartFile multipartFile) {
+		
+		User user = userDao.findById(userId).orElse(null);
+		
+		if(user == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Usuario desconocido");
+		}
+		
+		String extension = this.getExtensionByStringHandling(multipartFile.getOriginalFilename()).orElse(null);
+		
+		if(null == extension) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato no válido");
+		}
+		
+		String filename = UUID.randomUUID() + "." + extension;
+		
+		File file = new File(this.userImagePath + filename);
+
+		try {
+
+			FileOutputStream fos = new FileOutputStream(file);
+			fos.write(multipartFile.getBytes());
+			fos.close();
+			
+			System.out.println(user.getImageFilename());
+			
+			if(null != user.getImageFilename()) {
+				String oldFilename = this.userImagePath + user.getImageFilename();
+				
+				File oldFile = new File(oldFilename);
+				oldFile.delete();
+			}
+			
+			
+			
+			
+			String image = this.userImageUrl + filename;
+			
+			user.setImage(image);
+			user.setImageFilename(filename);
+			user = userDao.save(user);
+			
+			return user;
+
+		} catch (IOException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error al procesar el archivo", e);
+		}
+	}
+	
+	private Optional<String> getExtensionByStringHandling(String filename) {
+	    return Optional.ofNullable(filename)
+	      .filter(f -> f.contains("."))
+	      .map(f -> f.substring(filename.lastIndexOf(".") + 1));
 	}
 }

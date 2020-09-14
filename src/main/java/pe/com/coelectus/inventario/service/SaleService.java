@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,6 +21,7 @@ import pe.com.coelectus.inventario.dao.ClientDao;
 import pe.com.coelectus.inventario.dao.SaleDao;
 import pe.com.coelectus.inventario.dao.SaleDetailDao;
 import pe.com.coelectus.inventario.dao.StockDao;
+import pe.com.coelectus.inventario.dto.ApiResponse;
 import pe.com.coelectus.inventario.entity.Client;
 import pe.com.coelectus.inventario.entity.Sale;
 import pe.com.coelectus.inventario.entity.SaleDetail;
@@ -38,9 +42,13 @@ public class SaleService {
 	StockDao stockDao;
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+	
+	private static final int PAGE_LIMIT = 10;
 
-	public List<Sale> findAll() {
-		return saleDao.findAll();
+	public ApiResponse findAll(Integer pageNumber) {
+		Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_LIMIT);
+		Page<Sale> salesPage = saleDao.findAll(pageable);
+		return ApiResponse.of("Codigo", "Mensaje", salesPage.getContent(), Math.toIntExact(salesPage.getTotalElements()));
 	}
 
 	public Sale findById(Long id) {

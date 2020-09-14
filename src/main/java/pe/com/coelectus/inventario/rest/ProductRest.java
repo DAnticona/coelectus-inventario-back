@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.com.coelectus.inventario.dto.ApiResponse;
 import pe.com.coelectus.inventario.dto.ProductDto;
 import pe.com.coelectus.inventario.dto.converter.ProductConverter;
 import pe.com.coelectus.inventario.service.ProductService;
@@ -25,9 +26,10 @@ public class ProductRest {
 	@Autowired
 	ProductConverter productConverter; 
 	
-	@GetMapping
-	public ResponseEntity<?> findAll() {
-		return ResponseEntity.ok(productService.findAll());
+	@GetMapping("/slice/{page}")
+	public ResponseEntity<?> findAll(@PathVariable Integer page) {
+		ApiResponse response = productService.findAll(page);
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("{id}")

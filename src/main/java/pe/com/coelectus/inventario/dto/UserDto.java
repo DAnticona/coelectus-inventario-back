@@ -11,6 +11,7 @@ public class UserDto {
 	private String gender;
 	private String activeFg;
 	private String image;
+	private String imageFilename;
 	private String username;
 	private String password;
 	private RoleDto role;
@@ -110,11 +111,21 @@ public class UserDto {
 	public void setDocumentNu(String documentNu) {
 		this.documentNu = documentNu;
 	}
+	
+	public String getImageFilename() {
+		return imageFilename;
+	}
+
+	public void setImageFilename(String imageFilename) {
+		this.imageFilename = imageFilename;
+	}
 
 	@Override
 	public String toString() {
 		return "UserDto [id=" + id + ", docType=" + docType + ", documentNu=" + documentNu + ", name=" + name
 				+ ", lastname=" + lastname + ", email=" + email + ", gender=" + gender + ", activeFg=" + activeFg
-				+ ", image=" + image + ", username=" + username + ", password=" + password + ", role=" + role + "]";
+				+ ", image=" + image + ", imageFilename=" + imageFilename + ", username=" + username + ", password="
+				+ password + ", role=" + role + "]";
 	}
+
 }

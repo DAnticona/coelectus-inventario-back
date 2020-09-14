@@ -1,7 +1,5 @@
 package pe.com.coelectus.inventario.rest;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.com.coelectus.inventario.dto.ApiResponse;
 import pe.com.coelectus.inventario.dto.SaleDto;
 import pe.com.coelectus.inventario.dto.converter.SaleConverter;
 import pe.com.coelectus.inventario.dto.converter.SaleDetailConverter;
@@ -28,10 +27,10 @@ public class SaleRest {
 	@Autowired
 	SaleDetailConverter detailConverter;
 	
-	@GetMapping
-	public ResponseEntity<?> findAll() {
-		List<SaleDto> sales = saleConverter.fromEntity(saleService.findAll());
-		return ResponseEntity.ok(sales);
+	@GetMapping("/slice/{page}")
+	public ResponseEntity<?> findAll(@PathVariable Integer page) {
+		ApiResponse response = saleService.findAll(page);
+		return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("{id}")
