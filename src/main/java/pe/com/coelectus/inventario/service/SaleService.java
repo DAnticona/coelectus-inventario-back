@@ -22,6 +22,8 @@ import pe.com.coelectus.inventario.dao.SaleDao;
 import pe.com.coelectus.inventario.dao.SaleDetailDao;
 import pe.com.coelectus.inventario.dao.StockDao;
 import pe.com.coelectus.inventario.dto.ApiResponse;
+import pe.com.coelectus.inventario.dto.SaleDto;
+import pe.com.coelectus.inventario.dto.converter.SaleConverter;
 import pe.com.coelectus.inventario.entity.Client;
 import pe.com.coelectus.inventario.entity.Sale;
 import pe.com.coelectus.inventario.entity.SaleDetail;
@@ -40,6 +42,8 @@ public class SaleService {
 	ClientDao clientDao;
 	@Autowired
 	StockDao stockDao;
+	@Autowired
+	SaleConverter saleConverter;
 
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 	
@@ -48,7 +52,17 @@ public class SaleService {
 	public ApiResponse findAll(Integer pageNumber) {
 		Pageable pageable = PageRequest.of(pageNumber - 1, PAGE_LIMIT);
 		Page<Sale> salesPage = saleDao.findAll(pageable);
-		return ApiResponse.of("Codigo", "Mensaje", salesPage.getContent(), Math.toIntExact(salesPage.getTotalElements()));
+		List<SaleDto> sales = saleConverter.fromEntity(salesPage.getContent());
+		return ApiResponse.of("Codigo", "Mensaje", sales, Math.toIntExact(salesPage.getTotalElements()));
+	}
+	
+	public ApiResponse findByDates(String start, String end) {
+		
+		LocalDate startDate = LocalDate.parse(start, formatter);
+		LocalDate endDate = LocalDate.parse(end, formatter);
+		
+		List<SaleDto> sales = saleConverter.fromEntity(saleDao.findByDates(startDate, endDate));
+		return ApiResponse.of(HttpStatus.OK.toString(), null, sales, sales.size());
 	}
 
 	public Sale findById(Long id) {
@@ -103,8 +117,12 @@ public class SaleService {
 			details.get(i).setSaleDetailId(new SaleDetailId(sale.getSaleId(), i + 1));
 			details.get(i).setSale(sale);
 			SaleDetail detail = saleDetailDao.save(details.get(i));
-			this.updateStock(detail.getStock().getStockId().getProductId(), detail.getStock().getStockId().getStockId(),
-					detail.getQuantity());
+			
+			if(detail.getServiceFg().equals("N")) {
+				this.updateStock(detail.getStock().getStockId().getProductId(), detail.getStock().getStockId().getStockId(),
+						detail.getQuantity());	
+			}
+			
 			sale.getDetails().add(detail);
 		}
 
@@ -142,9 +160,11 @@ public class SaleService {
 			sale = saleDao.save(sale);
 
 			for (int i = 0; i < sale.getDetails().size(); i++) {
-				this.updateStock(sale.getDetails().get(i).getStock().getStockId().getProductId(),
-						sale.getDetails().get(i).getStock().getStockId().getStockId(),
-						sale.getDetails().get(i).getQuantity() * -1D);
+				if(sale.getDetails().get(i).getServiceFg().equals("N")) {
+					this.updateStock(sale.getDetails().get(i).getStock().getStockId().getProductId(),
+							sale.getDetails().get(i).getStock().getStockId().getStockId(),
+							sale.getDetails().get(i).getQuantity() * -1D);	
+				}
 			}
 		}
 
@@ -161,24 +181,40 @@ public class SaleService {
 		Double quantity = null;
 		Double unitPrice = null;
 		Double totalPrice = null;
+		String serviceFg = null;
+		String serviceName = null;
 
 		productId = detailNode.path("productId").asLong();
 		stockId = detailNode.path("stockId").asLong();
 		quantity = detailNode.path("quantity").asDouble();
 		unitPrice = detailNode.path("unitPrice").asDouble();
 		totalPrice = detailNode.path("totalPrice").asDouble();
+		serviceFg = detailNode.path("serviceFg").asText();
+		serviceName = detailNode.path("serviceName").asText();
 
 		detail = new SaleDetail();
-		Stock stock = stockDao.findById(new StockId(stockId, productId)).orElse(null);
+		
+		if("N".equals(serviceFg)) {
+			Stock stock = stockDao.findById(new StockId(stockId, productId)).orElse(null);
 
-		if (stock == null) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Producto o stock desconocido");
+			if (stock == null) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Producto o stock desconocido");
+			}
+
+			detail.setServiceFg(serviceFg);
+			detail.setStock(stock);
+			detail.setQuantity(quantity);
+			detail.setUnitPrice(unitPrice);
+			detail.setTotalPrice(totalPrice);
+			
+		} else if("S".equals(serviceFg)) {
+			detail.setServiceFg(serviceFg);
+			detail.setServiceName(serviceName);
+			detail.setQuantity(quantity);
+			detail.setUnitPrice(unitPrice);
+			detail.setTotalPrice(totalPrice);
 		}
 
-		detail.setStock(stock);
-		detail.setQuantity(quantity);
-		detail.setUnitPrice(unitPrice);
-		detail.setTotalPrice(totalPrice);
 
 		return detail;
 

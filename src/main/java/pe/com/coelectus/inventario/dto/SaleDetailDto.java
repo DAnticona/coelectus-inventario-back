@@ -8,6 +8,8 @@ public class SaleDetailDto {
 	private Double quantity;
 	private Double unitPrice;
 	private Double totalPrice;
+	private String serviceFg;
+	private String serviceName;
 	public Long getSaleId() {
 		return saleId;
 	}
@@ -44,9 +46,22 @@ public class SaleDetailDto {
 	public void setTotalPrice(Double totalPrice) {
 		this.totalPrice = totalPrice;
 	}
+	public String getServiceFg() {
+		return serviceFg;
+	}
+	public void setServiceFg(String serviceFg) {
+		this.serviceFg = serviceFg;
+	}
+	public String getServiceName() {
+		return serviceName;
+	}
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
 	@Override
 	public String toString() {
 		return "SaleDetailDto [saleId=" + saleId + ", item=" + item + ", stock=" + stock + ", quantity=" + quantity
-				+ ", unitPrice=" + unitPrice + ", totalPrice=" + totalPrice + "]";
+				+ ", unitPrice=" + unitPrice + ", totalPrice=" + totalPrice + ", serviceFg=" + serviceFg
+				+ ", serviceName=" + serviceName + "]";
 	}
 }

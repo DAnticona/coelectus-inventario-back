@@ -1,5 +1,6 @@
 package pe.com.coelectus.inventario.dao;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -14,6 +15,9 @@ import pe.com.coelectus.inventario.entity.Person;
 public interface PersonDao extends JpaRepository<Person, Long> {
 
 	public Optional<Person> findByDocumentNu(String documentNu);
+	
+	@Query("SELECT p FROM Person p WHERE p.name like %:term% or p.lastname like %:term%")
+	public List<Person> searchByName(String term);
 
 	@Transactional
 	@Modifying(clearAutomatically = true)

@@ -33,6 +33,12 @@ public class SaleRest {
 		return ResponseEntity.ok(response);
 	}
 	
+	@GetMapping("/from/{start}/to/{end}")
+	public ResponseEntity<?> findByDates(@PathVariable String start, @PathVariable String end) {
+		ApiResponse response = saleService.findByDates(start, end);
+		return ResponseEntity.ok(response);
+	}
+	
 	@GetMapping("{id}")
 	public ResponseEntity<?> findById(@PathVariable Long id) {
 		SaleDto sale = saleConverter.fromEntity(saleService.findById(id));

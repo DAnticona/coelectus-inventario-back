@@ -41,6 +41,12 @@ public class SaleDetail {
 	
 	@Column(name = "total_price")
 	private Double totalPrice;
+	
+	@Column(name = "service_fg")
+	private String serviceFg;
+	
+	@Column(name = "service_name")
+	private String serviceName;
 
 	public SaleDetailId getSaleDetailId() {
 		return saleDetailId;
@@ -90,10 +96,26 @@ public class SaleDetail {
 		this.totalPrice = totalPrice;
 	}
 
+	public String getServiceFg() {
+		return serviceFg;
+	}
+
+	public void setServiceFg(String serviceFg) {
+		this.serviceFg = serviceFg;
+	}
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+
 	@Override
 	public String toString() {
 		return "SaleDetail [saleDetailId=" + saleDetailId + ", sale=" + sale + ", stock=" + stock + ", quantity="
-				+ quantity + ", unitPrice=" + unitPrice + ", totalPrice=" + totalPrice + "]";
+				+ quantity + ", unitPrice=" + unitPrice + ", totalPrice=" + totalPrice + ", serviceFg=" + serviceFg
+				+ ", serviceName=" + serviceName + "]";
 	}
-	
 }

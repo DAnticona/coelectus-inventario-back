@@ -22,6 +22,8 @@ public class SaleDetailConverter extends AbstractConverter<SaleDetail, SaleDetai
 		detail.setQuantity(dto.getQuantity());
 		detail.setUnitPrice(dto.getUnitPrice());
 		detail.setTotalPrice(dto.getTotalPrice());
+		detail.setServiceFg(dto.getServiceFg());
+		detail.setServiceName(dto.getServiceName());
 		
 		if(dto.getSaleId() != null) {
 			detail.setSale(saleDao.findById(dto.getSaleId()).orElse(null));
@@ -44,6 +46,8 @@ public class SaleDetailConverter extends AbstractConverter<SaleDetail, SaleDetai
 		detail.setQuantity(entity.getQuantity());
 		detail.setUnitPrice(entity.getUnitPrice());
 		detail.setTotalPrice(entity.getTotalPrice());
+		detail.setServiceFg(entity.getServiceFg());
+		detail.setServiceName(entity.getServiceName());
 		
 		if(entity.getStock() != null) {
 			detail.setStock(stockConverter.fromEntity(entity.getStock()));

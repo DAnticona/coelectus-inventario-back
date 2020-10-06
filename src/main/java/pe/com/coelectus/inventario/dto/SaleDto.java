@@ -9,6 +9,8 @@ public class SaleDto {
 	private Long date;
 	private Double amount;
 	private String activeFg;
+	private String destination;
+	private String observations;
 	private List<SaleDetailDto> details;
 	
 	public Long getSaleId() {
@@ -47,9 +49,21 @@ public class SaleDto {
 	public void setActiveFg(String activeFg) {
 		this.activeFg = activeFg;
 	}
+	public String getDestination() {
+		return destination;
+	}
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+	public String getObservations() {
+		return observations;
+	}
+	public void setObservations(String observations) {
+		this.observations = observations;
+	}
 	@Override
 	public String toString() {
 		return "SaleDto [saleId=" + saleId + ", client=" + client + ", date=" + date + ", amount=" + amount
-				+ ", activeFg=" + activeFg + "]";
+				+ ", activeFg=" + activeFg + ", destination=" + destination + ", observations=" + observations + "]";
 	}
 }

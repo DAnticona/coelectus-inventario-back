@@ -37,6 +37,12 @@ public class Sale {
 	@Column(name = "active_fg")
 	private String activeFg;
 	
+	@Column(name = "destination")
+	private String destination;
+	
+	@Column(name = "observations")
+	private String observations;
+	
 	@OneToMany(mappedBy = "sale")
 	@JsonManagedReference
 	private List<SaleDetail> details;
@@ -89,9 +95,25 @@ public class Sale {
 		this.activeFg = activeFg;
 	}
 
+	public String getDestination() {
+		return destination;
+	}
+
+	public void setDestination(String destination) {
+		this.destination = destination;
+	}
+
+	public String getObservations() {
+		return observations;
+	}
+
+	public void setObservations(String observations) {
+		this.observations = observations;
+	}
+
 	@Override
 	public String toString() {
-		return "Sale [saleId=" + saleId + ", client=" + client + ", date=" + date + ", amount=" + amount
-				+ ", activeFg=" + activeFg + "]";
+		return "Sale [saleId=" + saleId + ", client=" + client + ", date=" + date + ", amount=" + amount + ", activeFg="
+				+ activeFg + ", destination=" + destination + ", observations=" + observations + "]";
 	}
 }

@@ -1,5 +1,6 @@
 package pe.com.coelectus.inventario.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import pe.com.coelectus.inventario.dao.CompanyDao;
 import pe.com.coelectus.inventario.dao.DocumentTypeDao;
 import pe.com.coelectus.inventario.dao.PersonDao;
 import pe.com.coelectus.inventario.dao.PersonTypeDao;
+import pe.com.coelectus.inventario.dto.ApiResponse;
+import pe.com.coelectus.inventario.dto.ClientDto;
+import pe.com.coelectus.inventario.dto.converter.ClientConverter;
 import pe.com.coelectus.inventario.entity.Client;
 import pe.com.coelectus.inventario.entity.Company;
 import pe.com.coelectus.inventario.entity.DocumentType;
@@ -35,6 +39,8 @@ public class ClientService {
 	CompanyDao companyDao;
 	@Autowired
 	DocumentTypeDao docTypeDao;
+	@Autowired
+	ClientConverter clientConverter;
 	
 	public List<Client> findAll() {
 		return clientDao.findAll();
@@ -56,6 +62,37 @@ public class ClientService {
 		}
 		
 		return client;
+	}
+	
+	public ApiResponse findByName(String name) {
+		
+		List<ClientDto> clients = new ArrayList<>();
+		
+		List<Company> companies = companyDao.searchByName(name);
+		
+		if(companies != null) {
+			for(Company company : companies) {
+				Client c = clientDao.findByCompany(company).orElse(null);
+				if(c != null) {
+					ClientDto client = clientConverter.fromEntity(c);
+					clients.add(client);
+				}
+			}
+		} 
+		
+		List<Person> persons = personDao.searchByName(name);
+		
+		if(persons != null) {
+			for(Person person : persons) {
+				Client c = clientDao.findByPerson(person).orElse(null);
+				if(c != null) {
+					ClientDto client = clientConverter.fromEntity(c);
+					clients.add(client);
+				}
+			}
+		}
+		
+		return ApiResponse.of(HttpStatus.OK.toString(), null, clients, clients.size());
 	}
 	
 	public Client findById(Long id) {

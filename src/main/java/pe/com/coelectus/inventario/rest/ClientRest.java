@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import pe.com.coelectus.inventario.dto.ApiResponse;
 import pe.com.coelectus.inventario.dto.ClientDto;
 import pe.com.coelectus.inventario.dto.converter.ClientConverter;
 import pe.com.coelectus.inventario.entity.Client;
@@ -54,6 +55,14 @@ public class ClientRest {
 		ClientDto clientDto = clientConverter.fromEntity(client);
 		
 		return ResponseEntity.ok(clientDto);
+	}
+	
+	@GetMapping("name/{name}")
+	public ResponseEntity<?> searchByName(@PathVariable String name) {
+		
+		ApiResponse response = clientService.findByName(name);
+		
+		return ResponseEntity.ok(response);
 	}
 
 	@PostMapping
